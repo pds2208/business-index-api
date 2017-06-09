@@ -10,14 +10,15 @@ import com.typesafe.config.Config
 import controllers.v1.BusinessIndexObj._
 import io.swagger.annotations._
 import nl.grons.metrics.scala.DefaultInstrumented
+import org.elasticsearch.client.transport.NoNodeAvailableException
 import play.api.libs.json._
 import play.api.mvc._
-import services.HBaseCache
 import services.JsonHelpers._
 import uk.gov.ons.bi.models.{BIndexConsts, BusinessIndexRec}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
+import scala.util.control.NonFatal
 
 object BusinessIndexObj {
 
@@ -60,7 +61,7 @@ object BusinessIndexObj {
 @Singleton
 class SearchController @Inject()(elastic: ElasticClient, val config: Config)(
   implicit context: ExecutionContext
-) extends SearchControllerUtils with ElasticDsl with DefaultInstrumented with HBaseCache with ElasticUtils {
+) extends SearchControllerUtils with ElasticDsl with DefaultInstrumented with ElasticUtils {
 
   implicit object LongParser extends CatsParser[Long] {
     override def parse(str: String): ValidatedNel[String, Long] = {
@@ -68,7 +69,6 @@ class SearchController @Inject()(elastic: ElasticClient, val config: Config)(
     }
   }
 
-  override protected def tableName: String = config.getString("hbase.requests.table.name")
 
   // metrics
   private[this] val requestMeter = metrics.meter("search-requests", "requests")
@@ -113,25 +113,14 @@ class SearchController @Inject()(elastic: ElasticClient, val config: Config)(
     }
   }
 
-  private[this] val isCaching = config.getBoolean("hbase.caching.enabled")
-
-  // hbase caching
+  // hbase caching - deleted
   private[this] def getOrElseWrap(request: String)(f: => Future[(RichSearchResponse, List[BusinessIndexRec])]):
   Future[(SearchData, List[BusinessIndexRec])] = {
-    if (isCaching) {
-      getFromCache(request) match {
-        case Some(s) =>
-          val cachedBus = biListFromJson(s)
-          Future.successful((SearchData(cachedBus.size.toLong, 100f), cachedBus))
-        case None => f.map { case (r, businesses) =>
-          updateCache(request, biListToJson(businesses).toString())
-          (SearchData(r.totalHits, r.maxScore), businesses)
-        }
+      f.map {
+        case (r, businesses) => (SearchData(r.totalHits, r.maxScore), businesses)
       }
-    } else {
-      f.map { case (r, businesses) => (SearchData(r.totalHits, r.maxScore), businesses) }
-    }
   }
+
 
   // public API
   @ApiOperation(value = "Search businesses by query",
@@ -197,6 +186,7 @@ class SearchController @Inject()(elastic: ElasticClient, val config: Config)(
           getOrElseWrap(query) {
             businessSearch(query, offset, limit, suggest, defaultOperator)
           } map response recover responseRecover(query, failOnQueryError)
+
         case _ =>
           BadRequest(errAsJson(400, "missing_query", "No query specified.")).future
       }
