@@ -176,22 +176,12 @@ lazy val api = (project in file("api"))
       "com.google.guava" % "guava" % "18.0",
 
       "org.apache.hadoop" % "hadoop-common" % "2.6.0",
-      "org.apache.hbase" % "hbase-common" % "1.3.1",
-      "org.apache.hbase" % "hbase-client" % "1.3.1",
 
       // below are set of jars required for testing hbase.
 
       "org.apache.hadoop" % "hadoop-common" % "2.6.0" % Test classifier "tests",
       "org.apache.hadoop" % "hadoop-hdfs" % "2.6.0" % Test classifier "tests",
       "org.apache.hadoop" % "hadoop-hdfs" % "2.6.0" % Test,
-      "org.apache.hbase" % "hbase-common" % "1.3.1" % Test classifier "tests",
-      "org.apache.hbase" % "hbase-client" % "1.3.1" % Test classifier "tests",
-      "org.apache.hbase" % "hbase-server" % "1.3.1" % Test,
-      "org.apache.hbase" % "hbase-server" % "1.3.1" % Test classifier "tests",
-      "org.apache.hbase" % "hbase-hadoop-compat" % "1.3.1" % Test,
-      "org.apache.hbase" % "hbase-hadoop2-compat" % "1.3.1" % Test,
-      "org.apache.hbase" % "hbase-hadoop-compat" % "1.3.1" % Test classifier "tests",
-      "org.apache.hbase" % "hbase-hadoop2-compat" % "1.3.1" % Test classifier "tests",
 
       "io.swagger" %% "swagger-play2" % "1.5.3",
       "org.webjars" % "swagger-ui" % "2.2.10-1"
