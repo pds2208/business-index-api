@@ -17,7 +17,7 @@ To install/run ElasticSearch on MacOS, use Homebrew (http://brew.sh):
 The last command runs an interactive Elasticsearch 2.4.1 session that the application can connect to using cluster name
 `elasticsearch_<your username>`. 
 
-### Running
+### Running (Local)
 
 To compile, build and run the application (by default it will connect to your local ElasticSearch):
 
@@ -29,6 +29,24 @@ To package the project in a runnable fat-jar:
 
 ```shell
 sbt assembly
+```
+
+### Running (Docker)
+
+You will need [Docker](https://docs.docker.com/docker-for-mac/install/) to run the commands below.
+
+Firstly, start up an ElasticSearch container.
+
+```shell
+docker pull elasticsearch:2.4
+docker run -e "discovery.type=single-node" elasticsearch:2.4
+```
+
+Then, publish a docker image for the `business-index-api` locally, before running it, making sure to expose port 9000 and pass in the correct environment variables.
+
+```shell
+sbt docker:publishLocal
+docker run -p 9000:9000 ons-business-index-api:1.0 -Denvironment=default -DONS_BI_API_ES_URI=elasticsearch://172.17.0.2:9300 -DONS_BI_API_ES_CLUSTER_NAME=elasticsearch -DONS_BI_API_IMPORT_SAMPLE=true
 ```
 
 ### Integration tests
