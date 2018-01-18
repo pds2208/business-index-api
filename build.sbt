@@ -94,6 +94,7 @@ lazy val businessIndex = (project in file("."))
   .settings(
     name := "ons-bi",
     moduleName := "ons-bi",
+    dockerExposedPorts := Seq(9000),
     version := "1.0"
   ).aggregate(api)
 
