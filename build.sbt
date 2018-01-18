@@ -9,8 +9,6 @@ lazy val Versions = new {
   val elasticSearchSpark = "2.4.0"
 }
 
-version := "1.0"
-
 // special configuration for black box tests: integration tests of real server
 // all Test classes with name ends ITest or ISpec can be run on real server
 lazy val BoxTest = config("box") extend Test
@@ -93,8 +91,7 @@ lazy val businessIndex = (project in file("."))
   .settings(commonSettings: _*)
   .settings(
     name := "ons-bi",
-    moduleName := "ons-bi",
-    version := "1.0"
+    moduleName := "ons-bi"
   ).aggregate(api)
 
 lazy val api = (project in file("api"))
