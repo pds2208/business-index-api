@@ -14,7 +14,8 @@ import scala.collection.immutable.ListMap
 @Singleton
 class VersionController extends Controller {
   def version = Action {
-    Ok(ListMap(BuildInfo.toMap.toSeq.sortBy { case (k, _) => k }: _*)
-      .map { case (k, v) => s""" "$k":"$v" """.trim }.mkString("{", ", ", "}")).as(JSON)
+    //    Ok(ListMap(BuildInfo.toMap.toSeq.sortBy { case (k, _) => k }: _*)
+    //      .map { case (k, v) => s""" "$k":"$v" """.trim }.mkString("{", ", ", "}")).as(JSON)
+    Ok("")
   }
 }

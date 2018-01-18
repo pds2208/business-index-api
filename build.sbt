@@ -1,6 +1,6 @@
 import play.sbt.PlayScala
 import sbtassembly.AssemblyPlugin.autoImport._
-import sbtbuildinfo.BuildInfoPlugin.autoImport._
+//import sbtbuildinfo.BuildInfoPlugin.autoImport._
 
 lazy val Versions = new {
   val util = "0.27.8"
@@ -8,6 +8,8 @@ lazy val Versions = new {
   val spark = "1.6.0"
   val elasticSearchSpark = "2.4.0"
 }
+
+version := "1.0"
 
 // special configuration for black box tests: integration tests of real server
 // all Test classes with name ends ITest or ISpec can be run on real server
@@ -91,17 +93,19 @@ lazy val businessIndex = (project in file("."))
   .settings(commonSettings: _*)
   .settings(
     name := "ons-bi",
-    moduleName := "ons-bi"
+    moduleName := "ons-bi",
+    version := "1.0"
   ).aggregate(api)
 
 lazy val api = (project in file("api"))
-  .enablePlugins(BuildInfoPlugin, PlayScala)
+  .enablePlugins(PlayScala) // BuildInfoPlugin
   .configs(BoxTest)
   .settings(commonSettings,
     inConfig(BoxTest)(Defaults.testTasks),
     name := "ons-business-index-api",
+    version := "1.0",
     scalaVersion := "2.11.8",
-    buildInfoPackage := "controllers",
+    // buildInfoPackage := "controllers",
     resolvers ++= Seq(
       "Hadoop Releases" at "https://repository.cloudera.com/content/repositories/releases/"
     ),
@@ -109,21 +113,21 @@ lazy val api = (project in file("api"))
     javaOptions in BoxTest ++= Seq("-Dintegration.test=true"),
     fork in run := true,
     fork in BoxTest := true,
-    buildInfoKeys ++= Seq[BuildInfoKey](
-      resolvers,
-      libraryDependencies,
-      BuildInfoKey.action("gitRevision") {
-        ("git rev-parse --short HEAD" !!).trim
-      }
-    ),
+//    buildInfoKeys ++= Seq[BuildInfoKey](
+//      resolvers,
+//      libraryDependencies,
+//      BuildInfoKey.action("gitRevision") {
+//        ("git rev-parse --short HEAD" !!).trim
+//      }
+//    ),
     routesGenerator := InjectedRoutesGenerator,
-    buildInfoOptions += BuildInfoOption.BuildTime,
-    buildInfoOptions += BuildInfoOption.ToJson,
+//    buildInfoOptions += BuildInfoOption.BuildTime,
+//    buildInfoOptions += BuildInfoOption.ToJson,
 
     // no javadoc for BuildInfo.scala
-    sources in(Compile, doc) <<= sources in(Compile, doc) map {
-      _.filterNot(_.getName endsWith ".scala")
-    },
+//    sources in(Compile, doc) <<= sources in(Compile, doc) map {
+//      _.filterNot(_.getName endsWith ".scala")
+//    },
 
     assemblyJarName in assembly := "ons-bi-api.jar",
     assemblyMergeStrategy in assembly := {
