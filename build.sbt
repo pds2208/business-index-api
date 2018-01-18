@@ -94,7 +94,6 @@ lazy val businessIndex = (project in file("."))
   .settings(
     name := "ons-bi",
     moduleName := "ons-bi",
-    dockerExposedPorts := Seq(9000),
     version := "1.0"
   ).aggregate(api)
 
@@ -166,6 +165,7 @@ lazy val api = (project in file("api"))
       "io.swagger" %% "swagger-play2" % "1.5.3",
       "org.webjars" % "swagger-ui" % "2.2.10-1"
     ),
-
+    dockerBaseImage := "openjdk:8-jre",
+    dockerExposedPorts := Seq(9000),
     dependencyOverrides += "com.google.guava" % "guava" % "18.0"
   )
