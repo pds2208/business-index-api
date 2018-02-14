@@ -160,7 +160,7 @@ lazy val api = (project in file("api"))
       "org.apache.hbase" % "hbase-client" % "1.3.0",
       "io.swagger" %% "swagger-play2" % "1.5.3",
       "org.webjars" % "swagger-ui" % "2.2.10-1"
-    ),
+    ).map(_.exclude("org.slf4j", "slf4j-log4j12")),
 
     dependencyOverrides += "com.google.guava" % "guava" % "18.0"
   )
