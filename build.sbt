@@ -79,6 +79,13 @@ lazy val commonSettings =
   )
 )
 
+lazy val hadoopDeps: Seq[ModuleID] = Seq(
+  "org.apache.hadoop" % "hadoop-common" % "2.6.0",
+  "org.apache.hadoop" % "hadoop-mapred" % "0.22.0",
+  "org.apache.hbase" % "hbase-common" % "1.3.0",
+  "org.apache.hbase" % "hbase-client" % "1.3.0"
+).map(_.excludeAll ( ExclusionRule("log4j", "log4j"), ExclusionRule ("org.slf4j", "slf4j-log4j12")))
+
 /**
   * The multi-module separation is necessary because the parsers module uses macros.
   * In order to use macros, they cannot be part of the same compilation unit that defines them,
@@ -139,7 +146,7 @@ lazy val api = (project in file("api"))
       filters,
       "org.webjars" %% "webjars-play" % "2.5.0-3",
       "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0",
-      "ch.qos.logback" % "logback-classic" % "1.1.7" excludeAll ExclusionRule("org.slf4j", "slf4j-log4j12"),
+      "ch.qos.logback" % "logback-classic" % "1.1.7",
       "com.splunk.logging" % "splunk-library-javalogging" % "1.5.2" excludeAll(
         ExclusionRule("commons-logging", "commons-logging"),
         ExclusionRule("org.apache.logging.log4j", "log4j-core"),
@@ -154,13 +161,12 @@ lazy val api = (project in file("api"))
       "org.scalatestplus.play" %% "scalatestplus-play" % "2.0.0-M1" % Test,
       "org.scalatest" %% "scalatest" % "3.0.0" % Test,
       "com.google.guava" % "guava" % "18.0",
-      "org.apache.hadoop" % "hadoop-common" % "2.6.0",
-      "org.apache.hadoop" % "hadoop-mapred" % "0.22.0",
-      "org.apache.hbase" % "hbase-common" % "1.3.0",
-      "org.apache.hbase" % "hbase-client" % "1.3.0",
+//      "org.apache.hadoop" % "hadoop-common" % "2.6.0",
+//      "org.apache.hadoop" % "hadoop-mapred" % "0.22.0",
+//      "org.apache.hbase" % "hbase-common" % "1.3.0",
+//      "org.apache.hbase" % "hbase-client" % "1.3.0",
       "io.swagger" %% "swagger-play2" % "1.5.3",
       "org.webjars" % "swagger-ui" % "2.2.10-1"
-    ),
-
+    ) ++ hadoopDeps,
     dependencyOverrides += "com.google.guava" % "guava" % "18.0"
   )
