@@ -139,7 +139,7 @@ lazy val api = (project in file("api"))
       filters,
       "org.webjars" %% "webjars-play" % "2.5.0-3",
       "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0",
-      "ch.qos.logback" % "logback-classic" % "1.1.7",
+      "ch.qos.logback" % "logback-classic" % "1.1.7" excludeAll exclude("org.slf4j", "slf4j-log4j12"),
       "com.splunk.logging" % "splunk-library-javalogging" % "1.5.2" excludeAll(
         ExclusionRule("commons-logging", "commons-logging"),
         ExclusionRule("org.apache.logging.log4j", "log4j-core"),
@@ -160,7 +160,7 @@ lazy val api = (project in file("api"))
       "org.apache.hbase" % "hbase-client" % "1.3.0",
       "io.swagger" %% "swagger-play2" % "1.5.3",
       "org.webjars" % "swagger-ui" % "2.2.10-1"
-    ).map(_.exclude("org.slf4j", "slf4j-log4j12")),
+    ),
 
     dependencyOverrides += "com.google.guava" % "guava" % "18.0"
   )
