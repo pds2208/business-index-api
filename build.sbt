@@ -139,7 +139,7 @@ lazy val api = (project in file("api"))
       filters,
       "org.webjars" %% "webjars-play" % "2.5.0-3",
       "com.typesafe.scala-logging" %% "scala-logging" % "3.5.0",
-      "ch.qos.logback" % "logback-classic" % "1.1.7" excludeAll exclude("org.slf4j", "slf4j-log4j12"),
+      "ch.qos.logback" % "logback-classic" % "1.1.7" excludeAll ExclusionRule("org.slf4j", "slf4j-log4j12"),
       "com.splunk.logging" % "splunk-library-javalogging" % "1.5.2" excludeAll(
         ExclusionRule("commons-logging", "commons-logging"),
         ExclusionRule("org.apache.logging.log4j", "log4j-core"),
