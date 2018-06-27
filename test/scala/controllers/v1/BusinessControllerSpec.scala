@@ -1,6 +1,7 @@
 package scala.controllers.v1
 
 import controllers.v1.BusinessController
+import jp.co.bizreach.trace.ZipkinTraceServiceLike
 import models.Business
 import repository.ElasticSearchBusinessRepository
 import play.api.libs.json.Json
@@ -18,12 +19,13 @@ class BusinessControllerSpec extends FreeSpec with Matchers with MockFactory wit
 
   trait Fixture extends SampleBusiness {
     val repository: ElasticSearchBusinessRepository = mock[ElasticSearchBusinessRepository]
+    val tracer: ZipkinTraceServiceLike = mock[ZipkinTraceServiceLike]
     val TargetUbrn = 12345678L
     val TargetQuery = "query=BusinessName:test"
     val TargetEmptyQuery = ""
     val TargetBusiness: Business = aBusinessSample(TargetUbrn)
 
-    val controller = new BusinessController(repository)
+    val controller = new BusinessController(repository, tracer)
   }
 
   "A request" - {
