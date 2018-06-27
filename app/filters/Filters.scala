@@ -4,6 +4,7 @@ import javax.inject.Inject
 
 import akka.stream.Materializer
 import controllers.BuildInfo
+import jp.co.bizreach.trace.play25.filter.ZipkinTraceFilter
 import play.api.http.DefaultHttpFilters
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 import play.api.mvc.{ Filter, RequestHeader, Result }
@@ -39,5 +40,5 @@ class XResponseTimeHeader @Inject() (implicit val mat: Materializer) extends Fil
   }
 }
 
-class Filters @Inject() (gzipFilter: GzipFilter, responseTimeHeader: XResponseTimeHeader)
-  extends DefaultHttpFilters(gzipFilter, responseTimeHeader)
+class Filters @Inject() (gzipFilter: GzipFilter, traceFilter: ZipkinTraceFilter, responseTimeHeader: XResponseTimeHeader)
+  extends DefaultHttpFilters(gzipFilter, responseTimeHeader, traceFilter)

@@ -142,7 +142,8 @@ lazy val api = (project in file("."))
       "org.scalatest" %% "scalatest" % "3.0.0" % Test,
       "com.google.guava" % "guava" % "18.0",
       "io.swagger" %% "swagger-play2" % "1.5.3",
-      "org.webjars" % "swagger-ui" % "2.2.10-1"
+      "org.webjars" % "swagger-ui" % "2.2.10-1",
+      "jp.co.bizreach" %% "play-zipkin-tracing-play25" % "1.2.0"
     ),
 
     dependencyOverrides += "com.google.guava" % "guava" % "18.0"

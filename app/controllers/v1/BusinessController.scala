@@ -9,6 +9,8 @@ import play.api.mvc._
 import models._
 import services.BusinessRepository
 import controllers.v1.api.BusinessApi
+import jp.co.bizreach.trace.ZipkinTraceServiceLike
+import jp.co.bizreach.trace.play25.implicits.ZipkinTraceImplicits
 import play.api.libs.json.Json._
 import play.api.libs.concurrent.Execution.Implicits.defaultContext
 
@@ -16,7 +18,8 @@ import scala.util.Try
 
 @Api("Search")
 @Singleton
-class BusinessController @Inject() (service: BusinessRepository) extends Controller with ElasticDsl with BusinessApi {
+class BusinessController @Inject() (service: BusinessRepository, val tracer: ZipkinTraceServiceLike) extends Controller
+    with ElasticDsl with BusinessApi with ZipkinTraceImplicits {
 
   /**
    * /v1/search/:term - This endpoint can be used like this: /v1/search/BusinessName:test
